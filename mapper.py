@@ -81,7 +81,7 @@ def map(database):
     return Mapper(database.server, database.dbname)
 
 def document(method):
-    "Add the parent class's docstring to the inherited method"
+    "Add the parent class's docstring to the overwritten method"
     # TODO: this is very unflexible :-(
     method.__doc__ = getattr(Database, method.__name__).__doc__
     return method
