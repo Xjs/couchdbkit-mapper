@@ -80,7 +80,7 @@ def bulk_inner(obj, docs, _raw_json=False):
 def map(database):
     return Mapper(database.server, database.dbname)
 
-def document(method):
+def inherit_documentation(method):
     "Add the parent class's docstring to the overwritten method"
     # TODO: this is very unflexible :-(
     method.__doc__ = getattr(Database, method.__name__).__doc__
@@ -210,15 +210,15 @@ class Mapper(Database):
             view_func = super(Mapper, self).view
         return view_func(view_name, obj=None, wrapper=self.wrapper_maker(original_wrapper), **parameters)
     
-    @document
+    @inherit_documentation
     def view(self, view_name, **parameters):
         return self.view_wrapper(view_name, temporary_view=False, **parameters)
     
-    @document
+    @inherit_documentation
     def temp_view(self, design, **parameters):
         return self.view_wrapper(design, temporary_view=True, **parameters)
         
-    @document
+    @inherit_documentation
     def get(self, docid, rev=None, wrapper=None, _raw_json=False):
         def get_wrapper(obj):
             if not _raw_json:
@@ -233,7 +233,7 @@ class Mapper(Database):
     
     # what we inherit from Database
     # copied and pasted, sad but true. But we need this special behavior
-    @document
+    @inherit_documentation
     def doc_revisions(self, docid, with_doc=True, _raw_json=False):
         result = super(Mapper, self).doc_revisions(docid=docid, with_doc=with_doc, _raw_json=_raw_json)
         if not with_doc or _raw_json:
@@ -241,7 +241,7 @@ class Mapper(Database):
         else:
             return self.make_object(result)
     
-    @document
+    @inherit_documentation
     def save_doc(self, doc, _raw_json=False, **params):
         if hasattr(doc, '__dict__'): # Is not a dictionary itself
             doc = self.add(doc)
@@ -250,28 +250,28 @@ class Mapper(Database):
         else:
             return super(Mapper, self).save_doc(doc, _raw_json=_raw_json, **params)
     
-    @document
+    @inherit_documentation
     def __setitem__(self, doc_id, doc):
         doc = self.add(doc)
         return super(Mapper, self).__setitem__(doc_id, doc)
     
-    @document
+    @inherit_documentation
     def bulk_save(self, docs, _raw_json=False, **parameters):
         return super(Mapper, self).bulk_save(bulk_inner(self, docs, _raw_json), **parameters)
     
-    @document
+    @inherit_documentation
     def bulk_delete(self, docs, **parameters):
         return super(Mapper, self).bulk_delete(bulk_inner(self, docs, _raw_json), **parameters)
     
-    @document
+    @inherit_documentation
     def delete_doc(self, doc, **parameters):
         return super(Mapper, self).delete_doc(dict_from_doc(doc), **parameters)
     
-    @document
+    @inherit_documentation
     def copy_doc(self, doc, dest=None, **parameters):
         return super(Mapper, self).copy_doc(dict_from_doc(doc), dest=dest, **parameters)
     
-    @document
+    @inherit_documentation
     def documents(self, wrapper=None, **parameters):
         return self.view('_all_docs', wrapper=wrapper, **parameters)
         
