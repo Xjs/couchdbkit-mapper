@@ -182,7 +182,10 @@ class Mapper(Database):
     
     def wrapper_maker(self, original_wrapper=None):
         def mapper_wrapper(obj):
-            value = obj['value']
+            try:
+                value = obj['doc']
+            except KeyError:
+                value = obj['value']
             value['_id'] = obj['id'] # for make_object
             if '_rev' not in value: # we might be the _all_docs view
                 try:
