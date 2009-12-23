@@ -168,6 +168,9 @@ class Mapper(Database):
             # result['_rev'] = document['_rev']
         except KeyError:
             pass
+        except TypeError:
+            # it is probably a design document, or otherwise has an invalid ID
+            return document
         return result
 
 # somehow useless:        
