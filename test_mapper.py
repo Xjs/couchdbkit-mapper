@@ -21,7 +21,7 @@ import unittest
 
 from httplib2 import Http
 from restclient.transport import HTTPLib2Transport
-from restkit import ResourceNotFound
+from couchdbkit.resource import ResourceNotFound
 
 from mapper import Mapper
 from couchdbkit.client import Server
@@ -49,16 +49,9 @@ url = 'http://localhost:5984'
 
 class MapperTestCase(unittest.TestCase):
     def setUp(self):
-        if user is not None and password is not None:
-            http = Http()
-            http.add_credentials(user, password)
-            transport = HTTPLib2Transport(http=http)
-            transport.add_credentials(user, password)
-        else:
-            transport = None
-        self.server = Server(url, transport=transport)
+        self.server = Server(url)
         self.server.create_db(db_name)
-        self.db = Mapper(self.server, db_name)
+        self.db = Mapper(db_name, server=self.server)
         # TODO: create greeting/all view
         design_doc = {
             '_id': '_design/greeting',
