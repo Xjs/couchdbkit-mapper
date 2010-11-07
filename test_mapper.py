@@ -23,7 +23,7 @@ from httplib2 import Http
 from restclient.transport import HTTPLib2Transport
 from couchdbkit.resource import ResourceNotFound
 
-from mapper import Mapper
+from mapper import Mapper, map
 from couchdbkit.client import Server
 from couchdbkit.schema import Document
 
@@ -50,8 +50,7 @@ url = 'http://localhost:5984'
 class MapperTestCase(unittest.TestCase):
     def setUp(self):
         self.server = Server(url)
-        self.server.create_db(db_name)
-        self.db = Mapper(db_name, server=self.server)
+        self.db = map(self.server.get_or_create_db(db_name))
         # TODO: create greeting/all view
         design_doc = {
             '_id': '_design/greeting',

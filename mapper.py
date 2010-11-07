@@ -78,7 +78,7 @@ def bulk_inner(obj, docs, _raw_json=False):
             yield obj.add(doc).to_json()
             
 def map(database):
-    return Mapper(database.dbname, server=database.server)
+    return Mapper(database.uri, server=database.server)
 
 def inherit_documentation(method):
     "Add the parent class's docstring to the overwritten method"
