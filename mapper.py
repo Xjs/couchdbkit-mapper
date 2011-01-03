@@ -75,7 +75,7 @@ def bulk_inner(obj, docs, _raw_json=False):
         if _raw_json or isinstance(doc, dict):
             yield doc
         else:
-            yield obj.add(doc).to_json()
+            yield obj.add(doc)
             
 def map(database):
     return Mapper(database.uri, server=database.server)
@@ -239,13 +239,14 @@ class Mapper(Database):
     
     # what we inherit from Database
     # copied and pasted, sad but true. But we need this special behavior
-    @inherit_documentation
-    def doc_revisions(self, docid, with_doc=True, _raw_json=False):
-        result = super(Mapper, self).doc_revisions(docid=docid, with_doc=with_doc, _raw_json=_raw_json)
-        if not with_doc or _raw_json:
-            return result
-        else:
-            return self.make_object(result)
+    if False:
+        @inherit_documentation
+        def doc_revisions(self, docid, with_doc=True, _raw_json=False):
+            result = super(Mapper, self).doc_revisions(docid=docid, with_doc=with_doc, _raw_json=_raw_json)
+            if not with_doc or _raw_json:
+                return result
+            else:
+                return self.make_object(result)
     
     @inherit_documentation
     def save_doc(self, doc, _raw_json=False, **params):

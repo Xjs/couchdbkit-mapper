@@ -14,13 +14,12 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-__author__ = 'jannis.schnitzer@itisme.org (Jannis Andrija Schnitzer)'
+__author__ = 'jannis@myrkur.de (Jannis Andrija Schnitzer)'
 
 from datetime import datetime
 import unittest
 
 from httplib2 import Http
-from restclient.transport import HTTPLib2Transport
 from couchdbkit.resource import ResourceNotFound
 
 from mapper import Mapper, map
@@ -37,14 +36,10 @@ class Greeting(object):
         return self.author == other.author and self.content == other.content
 
 url = 'http://127.0.0.1:5984'
-user = None
-password = None
 db_name = 'couchdbkit_test'
 
 # alternatively
-url = 'http://localhost:5984'
-#user = 'username'
-#password = 'topsecret'
+#url = 'http://username:topsecret@localhost:5984/'
 #db_name = 'some_other_db'
 
 class MapperTestCase(unittest.TestCase):
