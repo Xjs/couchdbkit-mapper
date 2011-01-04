@@ -97,7 +97,7 @@ function (doc)
         self.assertEquals(g, self.db['another_g'])
     
     def testViewResults(self):
-        def frobnicate(greeting):
+        def frobnicate(obj):
             """Helper function that returns a greeting which is ``frobnicated''
             (this simulates an action being performed).
             
@@ -105,6 +105,7 @@ function (doc)
             the mapper func passed to Database.view with a custom one in order
             to give back mapped objects but still retain the ability to pass
             a custom wrapper function."""
+            greeting = obj['value']
             greeting.frobnicated = True
             return greeting
             

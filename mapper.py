@@ -186,19 +186,23 @@ class Mapper(Database):
                 value = obj['doc']
             except KeyError:
                 value = obj['value']
-            value['_id'] = obj['id'] # for make_object
-            if '_rev' not in value: # we might be the _all_docs view
-                try:
-                    value['_rev'] = obj['value']['rev']
-                    del(value['rev'])
-                except KeyError:
-                    pass
-            new_value = self.make_object(value)
-            obj['value'] = new_value
+            try:
+                value['_id'] = obj['id'] # for make_object
+                if '_rev' not in value: # we might be the _all_docs view
+                    try:
+                        value['_rev'] = obj['value']['rev']
+                        del(value['rev'])
+                    except KeyError:
+                        pass
+            except (TypeError, KeyError):
+                pass
+            else:
+                new_value = self.make_object(value)
+                obj['value'] = new_value
             if callable(original_wrapper):
                 return original_wrapper(obj)
             else:
-                return obj['value']
+                return obj
         return mapper_wrapper
 
     def view_wrapper(self, view_name, temporary_view=False, obj=None, wrapper=None, **parameters):
@@ -209,7 +213,6 @@ class Mapper(Database):
                 wrapper = obj.wrap
         # clarity of code!
         original_wrapper = wrapper
-        
         if temporary_view:
             view_func = super(Mapper, self).temp_view
         else:
