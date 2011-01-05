@@ -77,8 +77,8 @@ def bulk_inner(obj, docs, _raw_json=False):
         else:
             yield obj.add(doc)
             
-def map(database):
-    return Mapper(database.uri, server=database.server)
+def map(database, **kwargs):
+    return Mapper(database.uri, server=database.server, **kwargs)
 
 def inherit_documentation(method):
     "Add the parent class's docstring to the overwritten method"
@@ -103,6 +103,11 @@ class Mapper(Database):
     classes = dict()
         
     def __init__(self, *args, **parameters):
+        try:
+            self.auto_wrap = parameters['auto_wrap']
+            del(parameters['auto_wrap'])
+        except KeyError:
+            self.auto_wrap = False
         super(Mapper, self).__init__(*args, **parameters)
     
     # obsolete
@@ -202,7 +207,10 @@ class Mapper(Database):
             if callable(original_wrapper):
                 return original_wrapper(obj)
             else:
-                return obj
+                if self.auto_wrap and 'value' in obj:
+                    return obj['value']
+                else:
+                    return obj
         return mapper_wrapper
 
     def view_wrapper(self, view_name, temporary_view=False, obj=None, wrapper=None, **parameters):
